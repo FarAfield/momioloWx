@@ -2,4 +2,4 @@
 dist/
 package-lock.json
 node_modules/
-miniprogram_npm
+miniprogram_npm/
