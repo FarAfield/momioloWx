@@ -1,54 +1,84 @@
 // index.js
 // 获取应用实例
 const app = getApp()
-
+const Request = require('../../utils/request')
 Page({
   data: {
-    motto: 'Hello World',
-    userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
-  },
-  // 事件处理函数
-  bindViewTap() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
+    notice: '', // 公告
+    shopDetail: {}, // 店铺信息
+    orderType: 'waibai', // waibai | ziqu
+    categoryList: [], // 商品分类
+    goodsList: [], // 分类下商品
+    goodsCartList: [], // 购物车里的商品
+    currentGood: {}, // 当前选择的商品
   },
   onLoad() {
-    if (app.globalData.userInfo) {
-      this.setData({
-        userInfo: app.globalData.userInfo,
-        hasUserInfo: true
-      })
-    } else if (this.data.canIUse) {
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      app.userInfoReadyCallback = res => {
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
-      }
-    } else {
-      // 在没有 open-type=getUserInfo 版本的兼容处理
-      wx.getUserInfo({
-        success: res => {
-          app.globalData.userInfo = res.userInfo
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
-    }
+    this.getNotice();
+    this.getShopDetail();
+    
   },
-  getUserInfo(e) {
-    console.log(e)
-    app.globalData.userInfo = e.detail.userInfo
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
+  onShow() {
+
+  },
+  // 获取公告
+  getNotice() {
+    Request.request({
+      url: '/applets/notice/getData',
+      method: 'GET',
+      success: (data) => {
+        this.setData({ notice: data.content })
+      }
+    })
+  },
+  // 获取店铺详情
+  getShopDetail() {
+    Request.request({
+      url: '/applets/shopDetail/getData',
+      method: 'GET',
+      success: (data) => {
+        this.setData({ shopDetail: data })
+      }
+    })
+  },
+  // 查询商品分类
+  getCategory() {
+    Request.request({
+      url: '/applets/category/getData',
+      method: 'GET',
+      success: (data) => {
+        this.setData({ categoryList: data })
+        if (data.length) {
+          this.getGoodsByCategory(data[0].id)
+        }
+      }
+    })
+  },
+  // 查询分类下商品
+  getGoodsByCategory(categoryId) {
+    Request.request({
+      url: '/applets/goodsByCategory/getData',
+      data: {
+        sourcePath: 'goodsByCategory',
+        categoryId,
+      },
+      method: 'GET',
+      success: (data) => {
+        this.setData({ goodsList: data })
+      }
+    })
+  },
+
+  goToDetail() {
+    console.log('111')
+    wx.login({
+      success:res => {
+        console.log(res);
+      }
     })
   }
+
+
 })
+
+
+

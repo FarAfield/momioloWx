@@ -1,1 +1,35 @@
 /* pages/my/my.wxss */
+.header {
+  height: 300rpx;
+  position: relative;
+}
+.background{
+  height: 100%;
+  position: absolute;
+}
+.header-box{
+  height: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  position: absolute;
+}
+.header-info{
+  display: flex;
+  justify-content: start;
+}
+.header-list{
+  display: flex;
+  justify-content: center;
+}
+.header-list-item {
+  display: flex;
+  flex-direction: column;
+  margin: 0 24rpx;
+  font-size: 30rpx;
+}
+.header-list-item-text {
+  text-align: center;
+}
